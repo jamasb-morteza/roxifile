@@ -1,0 +1,27 @@
+[Unit]
+Description=RoxiFile FrankenPHP Octane server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/roxifile
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+Environment=XDG_DATA_HOME=/var/lib/roxifile-web/data
+Environment=XDG_CONFIG_HOME=/var/lib/roxifile-web/config
+StateDirectory=roxifile-web
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+ExecStart=/usr/bin/php artisan octane:start --server=frankenphp --host=roxifile.jamasb.me --port=443 --https --http-redirect --caddyfile=/var/www/roxifile/docs/Caddyfile --admin-port=2025 --max-requests=500 --no-interaction
+ExecReload=/usr/bin/php artisan octane:reload --no-interaction
+Restart=always
+RestartSec=5
+KillSignal=SIGTERM
+KillMode=mixed
+TimeoutStopSec=90
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target
